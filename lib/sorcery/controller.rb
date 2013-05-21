@@ -81,7 +81,7 @@ module Sorcery
       # You can override this method in your controllers,
       # or provide a different method in the configuration.
       def not_authenticated
-        redirect_to root_path
+        redirect_to new_user_session_path
       end
 
       # login a user instance
