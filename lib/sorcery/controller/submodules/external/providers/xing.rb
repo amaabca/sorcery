@@ -3,60 +3,64 @@ module Sorcery
     module Submodules
       module External
         module Providers
-          # This module adds support for OAuth with Twitter.com.
-          # When included in the 'config.providers' option, it adds a new option, 'config.twitter'.
-          # Via this new option you can configure Twitter specific settings like your app's key and secret.
+          # This module adds support for OAuth with xing.com.
+          # When included in the 'config.providers' option, it adds a new option, 'config.xing'.
+          # Via this new option you can configure Xing specific settings like your app's key and secret.
           #
-          #   config.twitter.key = <key>
-          #   config.twitter.secret = <secret>
+          #   config.xing.key = <key>
+          #   config.xing.secret = <secret>
           #   ...
           #
-          module Twitter
+          module Xing
             def self.included(base)
               base.module_eval do
                 class << self
-                  attr_reader :twitter
-                  # def twitter(&blk) # allows block syntax.
-                  #   yield @twitter
-                  # end
+                  attr_reader :xing
 
-                  def merge_twitter_defaults!
-                    @defaults.merge!(:@twitter => TwitterClient)
+                  def merge_xing_defaults!
+                    @defaults.merge!(:@xing => XingClient)
                   end
                 end
-                merge_twitter_defaults!
+                merge_xing_defaults!
                 update!
               end
             end
 
-            module TwitterClient
+            module XingClient
               include Base::BaseClient
               class << self
                 attr_accessor :key,
                               :secret,
                               :callback_url,
                               :site,
+                              :authorize_path,
+                              :request_token_path,
+                              :access_token_path,
                               :user_info_path,
                               :user_info_mapping
                 attr_reader   :access_token
 
                 include Protocols::Oauth1
 
-				        # Override included get_consumer method to provide authorize_path
-				        def get_consumer
-                  ::OAuth::Consumer.new(@key, @secret, :site => @site, :authorize_path => "/oauth/authenticate")
+                # Override included get_consumer method to provide authorize_path
+                def get_consumer
+                  ::OAuth::Consumer.new(@key, @secret, @configuration)
                 end
 
                 def init
-                  @site           = "https://api.twitter.com"
-                  @user_info_path = "/1.1/account/verify_credentials.json"
-                  @user_info_mapping = {}
+                  @configuration = {
+                      site: "https://api.xing.com/v1",
+                      authorize_path: '/authorize',
+                      request_token_path: '/request_token',
+                      access_token_path: '/access_token'
+                  }
+                  @user_info_path = "/users/me"
                 end
 
                 def get_user_hash
                   user_hash = {}
                   response = @access_token.get(@user_info_path)
-                  user_hash[:user_info] = JSON.parse(response.body)
+                  user_hash[:user_info] = JSON.parse(response.body)['users'].first
                   user_hash[:uid] = user_hash[:user_info]['id'].to_s
                   user_hash
                 end

@@ -37,6 +37,8 @@ module Sorcery
           old_session.each_pair do |k,v|
             session[k.to_sym] = v
           end
+          form_authenticity_token
+
           auto_login(user)
           after_login!(user, credentials)
           current_user
@@ -49,7 +51,8 @@ module Sorcery
       # Resets the session and runs hooks before and after.
       def logout
         if logged_in?
-          before_logout!(current_user)
+          @current_user = current_user if @current_user.nil?
+          before_logout!(@current_user)
           reset_session
           after_logout!
           @current_user = nil

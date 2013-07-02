@@ -79,6 +79,7 @@ module Sorcery
           def init_orm_hooks!
             self.class_eval do
               attr_accessor @sorcery_config.password_attribute_name
+
               before_save :encrypt_password, :if => Proc.new { |record|
                 record.send(sorcery_config.password_attribute_name).present?
               }
