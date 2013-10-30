@@ -137,7 +137,7 @@ module Sorcery
             user_class.transaction do
               @user = user_class.new()
               attrs.each do |k,v|
-                @user.send(:"#{k}=", v)
+                @user.send(:"#{k}=", v) unless v.nil?
               end
 
               if block_given?
