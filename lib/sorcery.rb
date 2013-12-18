@@ -39,6 +39,7 @@ module Sorcery
           autoload :Liveid, 'sorcery/controller/submodules/external/providers/liveid'
           autoload :Linkedin, 'sorcery/controller/submodules/external/providers/linkedin'
           autoload :Vk, 'sorcery/controller/submodules/external/providers/vk'
+          autoload :Gatekeeper, 'sorcery/controller/submodules/external/providers/gatekeeper'
           autoload :Xing, 'sorcery/controller/submodules/external/providers/xing'
         end
       end
