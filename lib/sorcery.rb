@@ -31,6 +31,7 @@ module Sorcery
           autoload :Oauth2, 'sorcery/controller/submodules/external/protocols/oauth2'
         end
         module Providers
+          autoload :Base, 'sorcery/controller/submodules/external/providers/base'
           autoload :Twitter, 'sorcery/controller/submodules/external/providers/twitter'
           autoload :Facebook, 'sorcery/controller/submodules/external/providers/facebook'
           autoload :Github, 'sorcery/controller/submodules/external/providers/github'
@@ -38,7 +39,7 @@ module Sorcery
           autoload :Liveid, 'sorcery/controller/submodules/external/providers/liveid'
           autoload :Linkedin, 'sorcery/controller/submodules/external/providers/linkedin'
           autoload :Vk, 'sorcery/controller/submodules/external/providers/vk'
-          autoload :Gatekeeper, 'sorcery/controller/submodules/external/providers/gatekeeper'
+          autoload :Xing, 'sorcery/controller/submodules/external/providers/xing'
         end
       end
     end

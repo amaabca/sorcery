@@ -27,6 +27,7 @@ module Sorcery
             end
 
             module VkClient
+              include Base::BaseClient
               class << self
                 attr_accessor :key,
                               :secret,
@@ -34,7 +35,8 @@ module Sorcery
                               :auth_path,
                               :token_path,
                               :site,
-                              :user_info_mapping
+                              :user_info_mapping,
+                              :state
                 attr_reader   :access_token
 
                 include Protocols::Oauth2
@@ -47,16 +49,16 @@ module Sorcery
                   @user_info_mapping = {}
                 end
 
-                def get_user_hash
+                def get_user_hash(access_token)
                   user_hash = {}
 
                   params = {
-                    :access_token => @access_token.token,
-                    :uids         => @access_token.params["user_id"],
+                    :access_token => access_token.token,
+                    :uids         => access_token.params["user_id"],
                     :fields       => @user_info_mapping.values.join(",")
                   }
 
-                  response = @access_token.get(@user_info_url, :params => params)
+                  response = access_token.get(@user_info_url, :params => params)
                   if user_hash[:user_info] = JSON.parse(response.body)
                     user_hash[:user_info] = user_hash[:user_info]["response"][0]
                     # add full_name - useful if you do not store it in separate fields
@@ -84,7 +86,7 @@ module Sorcery
                     :token_url    => @token_path,
                     :token_method => :post
                   }
-                  @access_token = self.get_access_token(args, options)
+                  return self.get_access_token(args, options)
                 end
 
               end

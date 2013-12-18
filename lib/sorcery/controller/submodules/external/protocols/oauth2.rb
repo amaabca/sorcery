@@ -14,7 +14,8 @@ module Sorcery
               client.auth_code.authorize_url(
                 :redirect_uri => @callback_url,
                 :scope => @scope,
-                :display => @display
+                :display => @display,
+                :state => @state
               )
             end
 
@@ -22,7 +23,11 @@ module Sorcery
               client = build_client(options)
               client.auth_code.get_token(
                 args[:code],
-                { :redirect_uri => @callback_url, :parse => options.delete(:parse) }, options
+                {
+                  :redirect_uri => @callback_url,
+                  :parse => options.delete(:parse)
+                },
+                options
               )
             end
 

@@ -28,15 +28,17 @@ module Sorcery
 
       # Takes credentials and returns a user on successful authentication.
       # Runs hooks after login or failed login.
-       def login(*credentials)
+      def login(*credentials)
         @current_user = nil
         user = user_class.authenticate(*credentials)
         if user
           old_session = session.dup.to_hash
-          reset_session # protect from session fixation attacks
+          reset_sorcery_session
           old_session.each_pair do |k,v|
             session[k.to_sym] = v
           end
+          form_authenticity_token
+
           auto_login(user)
           after_login!(user, credentials)
           current_user
@@ -46,11 +48,20 @@ module Sorcery
         end
       end
 
+      # put this into the catch block to rescue undefined method `destroy_session'
+      # hotfix for https://github.com/NoamB/sorcery/issues/464
+      # can be removed when Rails 4.1 is out
+      def reset_sorcery_session
+        reset_session # protect from session fixation attacks
+      rescue NoMethodError
+      end
+
       # Resets the session and runs hooks before and after.
       def logout
         if logged_in?
-          before_logout!(current_user)
-          reset_session
+          @current_user = current_user if @current_user.nil?
+          before_logout!(@current_user)
+          reset_sorcery_session
           after_logout!
           @current_user = nil
         end
@@ -63,7 +74,11 @@ module Sorcery
       # attempts to auto-login from the sources defined (session, basic_auth, cookie, etc.)
       # returns the logged in user if found, false if not (using old restful-authentication trick, nil != false).
       def current_user
-        @current_user ||= login_from_session || login_from_other_sources unless @current_user == false
+        if @current_user == false
+          false
+        else
+          @current_user ||= login_from_session || login_from_other_sources
+        end
       end
 
       def current_user=(user)
@@ -88,7 +103,7 @@ module Sorcery
       #
       # @param [<User-Model>] user the user instance.
       # @return - do not depend on the return value.
-      def auto_login(user)
+      def auto_login(user, should_remember = false)
         session[:user_id] = user.id
         @current_user = user
       end

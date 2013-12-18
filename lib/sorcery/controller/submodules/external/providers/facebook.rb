@@ -16,7 +16,7 @@ module Sorcery
               base.module_eval do
                 class << self
                   attr_reader :facebook                           # access to facebook_client.
-                  
+
                   def merge_facebook_defaults!
                     @defaults.merge!(:@facebook => FacebookClient)
                   end
@@ -25,8 +25,9 @@ module Sorcery
                 update!
               end
             end
-          
+
             module FacebookClient
+              include Base::BaseClient
               class << self
                 attr_accessor :key,
                               :secret,
@@ -36,11 +37,12 @@ module Sorcery
                               :scope,
                               :user_info_mapping,
                               :display,
-                              :access_permissions
+                              :access_permissions,
+                              :state
                 attr_reader   :access_token
 
                 include Protocols::Oauth2
-            
+
                 def init
                   @site           = "https://graph.facebook.com"
                   @user_info_path = "/me"
@@ -52,19 +54,19 @@ module Sorcery
                   @parse          = :query
                   @param_name     = "access_token"
                 end
-                
-                def get_user_hash
+
+                def get_user_hash(access_token)
                   user_hash = {}
-                  response = @access_token.get(@user_info_path)
+                  response = access_token.get(@user_info_path)
                   user_hash[:user_info] = JSON.parse(response.body)
                   user_hash[:uid] = user_hash[:user_info]['id']
                   user_hash
                 end
-                
+
                 def has_callback?
                   true
                 end
-                
+
                 # calculates and returns the url to which the user should be redirected,
                 # to get authenticated at the external provider's site.
                 def login_url(params,session)
@@ -82,15 +84,15 @@ module Sorcery
                   args = {}
                   options = { :token_url => @token_url, :mode => @mode, :param_name => @param_name, :parse => @parse }
                   args.merge!({:code => params[:code]}) if params[:code]
-                  @access_token = self.get_access_token(args, options)
+                  return self.get_access_token(args, options)
                 end
-                
+
               end
               init
             end
-            
+
           end
-        end    
+        end
       end
     end
   end

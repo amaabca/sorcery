@@ -27,6 +27,7 @@ module Sorcery
             end
 
             module GoogleClient
+              include Base::BaseClient
               class << self
                 attr_accessor :key,
                               :secret,
@@ -36,7 +37,8 @@ module Sorcery
                               :token_path,
                               :user_info_url,
                               :scope,
-                              :user_info_mapping
+                              :user_info_mapping,
+                              :state
                 attr_reader   :access_token
 
                 include Protocols::Oauth2
@@ -50,9 +52,9 @@ module Sorcery
                   @user_info_mapping = {}
                 end
 
-                def get_user_hash
+                def get_user_hash(access_token)
                   user_hash = {}
-                  response = @access_token.get(@user_info_url)
+                  response = access_token.get(@user_info_url)
                   user_hash[:user_info] = JSON.parse(response.body)
                   user_hash[:uid] = user_hash[:user_info]['id']
                   user_hash
@@ -76,7 +78,7 @@ module Sorcery
                     :token_url => @token_url,
                     :token_method => :post
                   }
-                  @access_token = self.get_access_token(args, options)
+                  return self.get_access_token(args, options)
                 end
               end
               init
