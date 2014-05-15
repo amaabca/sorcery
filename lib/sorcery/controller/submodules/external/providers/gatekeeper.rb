@@ -53,7 +53,7 @@ module Sorcery
 
                 def get_user_hash(access_token)
                   user_hash = {}
-                  response = access_token.get(@user_info_path)
+                  response = Faraday.get @user_info_path, {}, { "Authorization" => "Bearer #{access_token.token}" }
                   user_info = JSON.parse(response.body)
                   user_hash[:user_info] = user_info['user']
                   user_hash[:uid] = user_hash[:user_info]['id']
