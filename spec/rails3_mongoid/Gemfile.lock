@@ -1,5 +1,5 @@
 PATH
-  remote: ../../
+  remote: ../..
   specs:
     sorcery (0.7.13)
       bcrypt-ruby (~> 3.0.0)
@@ -95,7 +95,7 @@ GEM
       activesupport (= 3.0.3)
       rake (>= 0.8.7)
       thor (~> 0.14.4)
-    rake (0.9.2.2)
+    rake (13.0.1)
     rspec (2.5.0)
       rspec-core (~> 2.5.0)
       rspec-expectations (~> 2.5.0)
