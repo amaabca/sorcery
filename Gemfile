@@ -2,7 +2,7 @@ source :rubygems
 # Add dependencies required to use your gem here.
 # Example:
 #   gem "activesupport", ">= 2.3.5"
-gem 'oauth', "~> 0.4.4"
+gem 'oauth', "~> 0.5.5"
 gem 'oauth2', "~> 0.8.0"
 gem 'bcrypt-ruby', "~> 3.0.0"
 
