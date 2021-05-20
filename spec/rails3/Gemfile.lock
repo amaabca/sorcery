@@ -1,5 +1,5 @@
 PATH
-  remote: ../../
+  remote: ../..
   specs:
     sorcery (0.7.13)
       bcrypt-ruby (~> 3.0.0)
@@ -71,9 +71,12 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.17.2)
+    mini_portile2 (2.5.1)
     multi_json (1.1.0)
     multipart-post (1.1.5)
-    nokogiri (1.5.0)
+    nokogiri (1.11.5)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
     oauth (0.4.7)
     oauth2 (0.8.0)
       faraday (~> 0.8)
@@ -82,6 +85,7 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.2)
     polyglot (0.3.3)
+    racc (1.5.2)
     rack (1.2.5)
     rack-mount (0.6.14)
       rack (>= 1.0.0)
