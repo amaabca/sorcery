@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem "rails", '3.0.3'
+gem "rails", '3.2.17'
 gem 'bcrypt-ruby', :require => 'bcrypt'
 gem "sorcery", '>= 0.1.0', :path => '../'
 gem 'oauth', "~> 0.4.4"
