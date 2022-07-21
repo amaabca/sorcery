@@ -1,5 +1,5 @@
 PATH
-  remote: ../../
+  remote: ../..
   specs:
     sorcery (0.7.13)
       bcrypt-ruby (~> 3.0.0)
@@ -137,7 +137,7 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.31)
+    tzinfo (0.3.61)
 
 PLATFORMS
   ruby
